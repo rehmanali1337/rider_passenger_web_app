@@ -3,6 +3,11 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button } from '@material-ui/core'
 import { Redirect } from 'react-router';
+import CirclarIndeterminate from './CircularProgress'
+import { registrationRequest } from '../utils/requests'
+import { notify_success } from '../utils/utils'
+import 'react-toastify/dist/ReactToastify.css';
+import { PageButton } from './Buttons'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
 		marginRight: 'auto'
 	},
 	signupButton: {
-		marginTop: '2vh'
+		marginTop: '2vh',
+		marginBottom: '2vh'
 	}
 }));
 
@@ -35,7 +41,7 @@ export default function SingupForm() {
 	const [password, setPassword] = useState(null)
 	const [signupSuccess, setSignupSuccess] = useState(null)
 
-	const handleFormSubmit = (e) => {
+	const handleFormSubmit = async (e) => {
 		e.preventDefault()
 		if (firstName === null ||
 			lastName === null ||
@@ -44,10 +50,13 @@ export default function SingupForm() {
 			return
 		}
 		setSigning(true)
-		setTimeout(() => {
+		const res = await registrationRequest(firstName, lastName, email, password)
+		if (res.status === 200) {
 			setSigning(false)
+			notify_success('Signup Successfull')
 			setSignupSuccess(true)
-		}, 2000)
+		}
+
 	}
 
 	if (signupSuccess) {
@@ -55,7 +64,7 @@ export default function SingupForm() {
 	}
 
 	return (
-		<Box border={1} className={classes.box}>
+		<Box border={1} className={classes.box} borderRadius={10}>
 			<form className={classes.root} autoComplete="off" onSubmit={handleFormSubmit}>
 				<div>
 					<TextField
@@ -87,7 +96,8 @@ export default function SingupForm() {
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 					<br />
-					<Button className={classes.signupButton} type='submit' variant='contained' disabled={signing}>{signing ? 'Signing Up...' : 'Sign Up'}</Button>
+					<PageButton disabled={signing}>{signing ? 'Signing Up...' : 'Sign Up'}</PageButton>
+					{signing && <CirclarIndeterminate />}
 				</div>
 			</form>
 		</Box>

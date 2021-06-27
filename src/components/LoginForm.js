@@ -10,6 +10,10 @@ import { Box, Button, Typography } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import { types } from '../store/variables'
 import { Redirect } from 'react-router'
+import CircularIndeterminate from '../components/CircularProgress'
+import { notify_success, notify_error } from '../utils/utils'
+import { loginRequest } from '../utils/requests'
+import { PageButton } from './Buttons'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,10 +43,6 @@ const theme = createMuiTheme({
 });
 
 
-const fetchData = async (username, password) => {
-	const URL = 'https://jsonplaceholder.typicode.com/todos/1'
-	return await (await fetch(URL)).json();
-}
 
 export default function LoginForm() {
 	const classes = useStyles();
@@ -53,7 +53,6 @@ export default function LoginForm() {
 	const loggedIn = useSelector((state) => {
 		return state.loggedIn
 	})
-	console.log(loggedIn)
 
 
 	const handleFormSubmit = async (data) => {
@@ -62,9 +61,17 @@ export default function LoginForm() {
 			return
 		}
 		setCheckingLogin(true)
-		const response = await fetchData(username, password)
+		const response = await loginRequest(username, password)
+		if ('access_token' in response) {
+			const payload = {
+				accessToken: response.access_token
+			}
+			dispatch({ type: types.LOGIN, payload: payload })
+			notify_success('Login successfull')
+		} else {
+			notify_error('Invalid Username/Password')
+		}
 		setCheckingLogin(false)
-		dispatch({ type: types.LOGIN })
 	}
 
 	if (loggedIn) {
@@ -95,7 +102,10 @@ export default function LoginForm() {
 						onChange={(e => { setPassword(e.target.value) })}
 					/>
 					<br />
-					<Button className={classes.loginButton} variant='contained' disabled={checkingLogin} type='submit'>{checkingLogin ? 'Logging in ..' : 'Login'}</Button>
+					<PageButton disabled={checkingLogin} type='submit'>{checkingLogin ? 'Logging in ..' : 'Login'}</PageButton>
+					{checkingLogin &&
+						<CircularIndeterminate />
+					}
 				</ThemeProvider>
 			</Box>
 		</form >

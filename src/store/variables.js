@@ -1,7 +1,7 @@
 
 export const initialState = {
 	loggedIn: false,
-	notifications: []
+	accessToken: null
 }
 
 export const types = {

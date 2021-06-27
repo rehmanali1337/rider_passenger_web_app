@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,9 +8,10 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Slide from '@material-ui/core/Slide';
 import { Button, makeStyles } from '@material-ui/core'
-import { mainStore } from '../store/store'
 import { useSelector, useDispatch } from 'react-redux';
 import { types } from '../store/variables';
+import { TopMenuButton } from './Buttons'
+import { GlobalContext } from '../context/GlobalContext'
 
 function HideOnScroll(props) {
 	const { children, window } = props;
@@ -26,18 +27,6 @@ function HideOnScroll(props) {
 	);
 }
 
-const useStyles = makeStyles({
-	headerButtonDiv: {
-		marginRight: 'auto',
-		marginLeft: 'auto'
-	},
-	headerButton: {
-		marginRight: '2vw'
-	},
-	loginButton: {
-		marginRight: '1vw'
-	}
-})
 
 HideOnScroll.propTypes = {
 	children: PropTypes.element.isRequired,
@@ -51,40 +40,63 @@ HideOnScroll.propTypes = {
 
 
 export default function HideAppBar(props) {
+	const AppContext = useContext(GlobalContext)
+
+	const useStyles = makeStyles({
+		headerButtonDiv: {
+			marginRight: 'auto',
+			marginLeft: 'auto'
+		},
+		headerButton: {
+			marginRight: '2vw'
+		},
+		loginButton: {
+			marginRight: '1vw'
+		},
+		appbar: {
+			backgroundColor: AppContext.Colors.header.headerBackground
+		},
+		toolbar: {
+			margin: 0,
+			padding: 0
+		}
+	})
+
 	const loggedIn = useSelector((state) => {
 		return state.loggedIn
 	})
 	const dispatch = useDispatch()
 
 	const handleLogout = () => {
-		console.log('Logging out ...')
 		dispatch({ type: types.LOGOUT })
 	}
-	console.log(loggedIn)
 	const classes = useStyles()
 	return (
 		<React.Fragment>
 			<CssBaseline />
 			<HideOnScroll {...props}>
-				<AppBar>
+				<AppBar className={classes.appbar}>
 					<Toolbar>
 						<div className={classes.headerButtonDiv}>
-							<Button className={classes.headerButton} href='/' variant='outlined' color='inherit'>Home</Button>
-							<Button href='/requests' variant='outlined' color='inherit'>Requests</Button>
+							<TopMenuButton href="/">Home</TopMenuButton>
+							<TopMenuButton href="/requests">Ride Requests</TopMenuButton>
+							{loggedIn &&
+								<TopMenuButton href="/post_request">Post Request</TopMenuButton>
+							}
+							{
+								!loggedIn &&
+								<TopMenuButton href="/signup">SignUp</TopMenuButton>
+							}
+							{loggedIn ?
+								<TopMenuButton onClick={handleLogout}>Logout</TopMenuButton>
+								:
+								<TopMenuButton href="/login">Login</TopMenuButton>
+							}
 						</div>
-						{
-							!loggedIn &&
-							<Button className={classes.loginButton} href='/signup' variant='outlined' color='inherit'>Sign Up</Button>
-						}
-						{loggedIn ?
-							<Button variant='outlined' color='inherit' onClick={handleLogout}>Logout</Button>
-							:
-							<Button className={classes.loginButton} href='/login' variant='outlined' color='inherit'>Login</Button>
-						}
 					</Toolbar>
 				</AppBar>
 			</HideOnScroll>
-			<Toolbar />
+			<Toolbar variant='dense' />
 			<Container>
 				<Box my={2}>
 					{props.children}
