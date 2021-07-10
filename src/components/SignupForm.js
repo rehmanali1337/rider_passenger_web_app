@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Button } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { Redirect } from 'react-router';
 import CirclarIndeterminate from './CircularProgress'
 import { registrationRequest } from '../utils/requests'
@@ -51,6 +51,7 @@ export default function SingupForm() {
 		}
 		setSigning(true)
 		const res = await registrationRequest(firstName, lastName, email, password)
+		// console.log(res)
 		if (res.status === 200) {
 			setSigning(false)
 			notify_success('Signup Successfull')
@@ -96,7 +97,7 @@ export default function SingupForm() {
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 					<br />
-					<PageButton disabled={signing}>{signing ? 'Signing Up...' : 'Sign Up'}</PageButton>
+					<PageButton type="submit" onClick={handleFormSubmit} disabled={signing}>{signing ? 'Signing Up...' : 'Sign Up'}</PageButton>
 					{signing && <CirclarIndeterminate />}
 				</div>
 			</form>

@@ -7,7 +7,7 @@ import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Slide from '@material-ui/core/Slide';
-import { Button, makeStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux';
 import { types } from '../store/variables';
 import { TopMenuButton } from './Buttons'
@@ -79,9 +79,12 @@ export default function HideAppBar(props) {
 					<Toolbar>
 						<div className={classes.headerButtonDiv}>
 							<TopMenuButton href="/">Home</TopMenuButton>
-							<TopMenuButton href="/requests">Ride Requests</TopMenuButton>
 							{loggedIn &&
-								<TopMenuButton href="/post_request">Post Request</TopMenuButton>
+								<>
+									<TopMenuButton href="/requests">Ride Requests</TopMenuButton>
+									<TopMenuButton href="/post_request">Post Request</TopMenuButton>
+									<TopMenuButton href="/offered_rides">Offered Rides</TopMenuButton>
+								</>
 							}
 							{
 								!loggedIn &&
@@ -92,11 +95,13 @@ export default function HideAppBar(props) {
 								:
 								<TopMenuButton href="/login">Login</TopMenuButton>
 							}
+							<TopMenuButton href="/about">About Us</TopMenuButton>
+							<TopMenuButton href="/contact_us">Contact Us!</TopMenuButton>
 						</div>
 					</Toolbar>
 				</AppBar>
 			</HideOnScroll>
-			<Toolbar variant='dense' />
+			<Toolbar />
 			<Container>
 				<Box my={2}>
 					{props.children}

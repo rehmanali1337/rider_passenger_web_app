@@ -21,6 +21,9 @@ export const GlobalContextValue = {
 			buttonBorder: '#ffffff',
 			buttonBorderHover: '#ff7600'
 		},
+		footer: {
+			background: '#f9f9f9'
+		},
 		homeCards: {
 			background: '#f9f9f9'
 		}

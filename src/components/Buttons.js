@@ -47,3 +47,27 @@ export function PageButton({ children, ...props }) {
 		<Button {...props} className={classes.button} variant="outlined">{children}</Button>
 	);
 }
+
+
+
+export function SideBarButton({ children, ...props }) {
+	const AppContext = useContext(GlobalContext)
+	const useStyles = makeStyles({
+		button: {
+			backgroundColor: AppContext.Colors.pageButton.buttonBackground,
+			color: AppContext.Colors.pageButton.buttonText,
+			borderColor: AppContext.Colors.pageButton.buttonBorder,
+			'&:hover': {
+				backgroundColor: AppContext.Colors.pageButton.buttonBackgroundHover,
+				color: AppContext.Colors.pageButton.buttonTextHover,
+				borderColor: AppContext.Colors.pageButton.buttonBorderHover,
+			},
+			width: '100%'
+		}
+	});
+	const classes = useStyles();
+
+	return (
+		<Button {...props} className={classes.button} variant="outlined">{children}</Button>
+	);
+}

@@ -62,7 +62,7 @@ export default function SimpleTabs() {
 
 	const handleRouteUpdate = (e) => {
 		history.push(value)
-		console.log(e)
+		// console.log(e)
 	}
 
 	return (

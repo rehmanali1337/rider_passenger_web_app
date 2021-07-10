@@ -1,8 +1,9 @@
+
 import { Typography, makeStyles } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import MainContainer from '../components/MainContainer'
-import RequestCard from '../components/Request'
-import { getAllRidesRequest } from '../utils/requests'
+import { MyRideCard } from '../components/MyRideCard'
+import { getMyRidesRequest } from '../utils/requests'
 import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 
@@ -14,7 +15,7 @@ const useStyles = makeStyles({
 	}
 })
 
-export const Requests = () => {
+export const MyRides = () => {
 	const [allRides, setAllRides] = useState([])
 	const [loading, setLoading] = useState(false)
 	const loggedIn = useSelector((state) => {
@@ -25,25 +26,15 @@ export const Requests = () => {
 	})
 	const classes = useStyles()
 	useEffect(() => {
-		if (loggedIn) {
-			setLoading(true)
-			getAllRidesRequest(accessToken).then((response) => {
-				// console.log(response)
-				let filteredRides = response.rides.filter((ride) => {
-					if (ride.reply === null) {
-						return true
-					} else {
-						return false
-					}
-				})
-				setAllRides(filteredRides)
-				setLoading(false)
-			})
-		}
+		setLoading(true)
+		getMyRidesRequest(accessToken).then((response) => {
+			setAllRides(response.rides)
+			setLoading(false)
+		})
 	}, [loggedIn, accessToken])
 
 	if (!loggedIn) {
-		<Redirect to="/" />
+		<Redirect to="/login" />
 	}
 
 	// return (<MainContainer>
@@ -66,12 +57,12 @@ export const Requests = () => {
 		)
 	}
 	const rides = allRides.map((ride) => {
-		return <RequestCard key={ride.ride_id.toString()} ride={ride} replyBox={false} />
+		return <MyRideCard key={ride.ride_id.toString()} ride={ride} />
 	})
 	return (
 		<MainContainer>
 			<Typography className={classes.header} variant="h4">
-				Ride Requests
+				My Rides
 			</Typography>
 			{rides}
 		</MainContainer>

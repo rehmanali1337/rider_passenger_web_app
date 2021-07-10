@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { green } from '@material-ui/core/colors';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import { types } from '../store/variables'
 import { Redirect } from 'react-router'

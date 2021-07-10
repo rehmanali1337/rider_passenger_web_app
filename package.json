@@ -1,5 +1,6 @@
 {
   "name": "rider-passenger",
+  "homepage": "http://yidriders.wpweber.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

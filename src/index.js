@@ -8,13 +8,13 @@ import { mainStore } from './store/store'
 import { GlobalContextValue, GlobalContext } from './context/GlobalContext'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <GlobalContext.Provider value={GlobalContextValue}>
-      <Provider store={mainStore}>
-        <App />
-      </Provider>
-    </GlobalContext.Provider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <GlobalContext.Provider value={GlobalContextValue}>
+    <Provider store={mainStore}>
+      <App />
+    </Provider>
+  </GlobalContext.Provider>,
+  // </React.StrictMode>,
   document.getElementById('root')
 );
 

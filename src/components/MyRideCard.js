@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -9,16 +9,11 @@ import { red } from '@material-ui/core/colors';
 import CardActions from '@material-ui/core/CardActions';
 import { PageButton } from './Buttons';
 import { Grid } from '@material-ui/core'
-import { TextField } from '@material-ui/core'
-import CircularIndeterminate from '../components/CircularProgress'
+import { Collapse } from '@material-ui/core'
+import { convertToDate, notify_error, notify_success } from '../utils/utils'
+import { deleteRideRequest } from '../utils/requests'
 import { useSelector } from 'react-redux'
-import { addRideOfferRequest } from '../utils/requests'
-import { notify_success, notify_error } from '../utils/utils'
-import { Redirect } from 'react-router'
-import { convertToDate } from '../utils/utils'
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import { Redirect } from 'react-router';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -65,39 +60,53 @@ const useStyles = makeStyles((theme) => ({
 	replyHeading: {
 		// marginTop: '2rem',
 		marginBottom: '2rem'
+	},
+	collapse: {
+		paddingLeft: '3rem',
+		paddingRight: '3rem',
+		paddningBottom: '5rem',
+		marginBottom: '2rem'
 	}
 }));
 
 
-export default function RequestCard({ ride, replyBox }) {
+export function MyRideCard({ ride }) {
 	const classes = useStyles();
 	const datetime = convertToDate(ride.timestamp)
-	const [replyText, setReplyText] = React.useState(null)
-	const [sendingOffer, setSendingOffer] = React.useState(false)
-	const [offerSent, setOfferSent] = React.useState(false)
-	const [money, setMoney] = React.useState(0)
+	const [expanded, setExpanded] = React.useState(false);
+	const [deletingRide, setDeletingRide] = useState(false)
+	const [rideDeleted, setRideDeleted] = useState(false)
 	const accessToken = useSelector((state) => {
 		return state.accessToken
 	})
+	const loggedIn = useSelector((state) => {
+		return state.loggedIn
+	})
 
+	const handleExpandClick = () => {
+		setExpanded(!expanded);
+	};
 
-	const handleSendOffer = async () => {
-		setSendingOffer(true)
-		addRideOfferRequest(accessToken, ride.ride_id, replyText, money).then((response) => {
-			// console.log(response)
-			if (response.status === 200) {
-				setOfferSent(true)
-				notify_success('Offer Sent!')
-				setSendingOffer(false)
-			} else {
-				notify_error('Offer Not sent!')
-				setSendingOffer(false)
+	const handleDeleteRide = () => {
+		setDeletingRide(true)
+		deleteRideRequest(accessToken, ride.ride_id).then((resp) => {
+			if (resp.status === 200) {
+				notify_success("Deleted ride")
+				setRideDeleted(true)
 			}
+		}, (error) => {
+			notify_error("Could not delete the ride")
+			// console.log(error)
 		})
+
 	}
 
-	if (offerSent) {
-		return <Redirect to="/requests" />
+	if (!loggedIn) {
+		return <Redirect to="/login" />
+	}
+
+	if (rideDeleted) {
+		return <Redirect to="/offered_rides" />
 	}
 
 	return (
@@ -163,53 +172,33 @@ export default function RequestCard({ ride, replyBox }) {
 							<Typography color="textSecondary">{ride.call ? 'Available' : 'Not-Available'}</Typography>
 						</Grid>
 					</Grid>
+					{/* </Grid> */}
 				</Grid>
 				<Typography variant="h5">Message</Typography>
 				<Typography paragraph>
 					{ride.request_text}
 				</Typography>
 			</CardContent>
-			{replyBox &&
-
-				<div className={classes.replyBoxWrapper}>
-					<div className={classes.inputWrapper}>
-
-						<InputLabel htmlFor="amount">Amount</InputLabel>
-						<OutlinedInput
-							id="amount"
-							value={money}
-							onChange={(e) => {
-								setMoney(e.target.value)
-							}}
-							startAdornment={<InputAdornment position="start">$</InputAdornment>}
-							labelWidth={60}
-						/>
-					</div>
-					<Typography variant="h5" className={classes.replyHeading}>Reply</Typography>
-					<TextField
-						className={classes.margin}
-						label="Reply Text"
-						multiline
-						fullWidth
-						rows={10}
-						type="text"
-						variant="outlined"
-						onChange={(e => { setReplyText(e.target.value) })}
-					/>
-				</div>
-			}
 			<CardActions disableSpacing className={classes.cardActions}>
-				{replyBox ?
-					<>
-						<PageButton disabled={sendingOffer} onClick={handleSendOffer}>{sendingOffer ? 'Sending Offer' : 'Send Offer'}</PageButton>
-						{sendingOffer &&
-							<CircularIndeterminate />
-						}
-					</>
-					:
-					<PageButton href={`/offer_ride?ride_id=${ride.ride_id}`}>Offer Ride</PageButton>
-				}
+				<PageButton disabled={deletingRide} onClick={handleExpandClick}>View Offer</PageButton>
+				<PageButton disabled={deletingRide} onClick={handleDeleteRide}>Delete Ride</PageButton>
 			</CardActions>
-		</Card>
+			<Collapse in={expanded} timeout="auto" unmountOnExit className={classes.collapse}>
+				<CardContent>
+					{ride.reply === null ?
+						'No Offer yet!'
+						:
+						<>
+							<Typography variant="h5">{ride.reply.owner_name}</Typography>
+							<Typography variant="h6">Offered Amount</Typography>
+							<Typography color="textSecondary">${ride.reply.offered_amount}</Typography>
+							<Typography>
+								{ride.reply.reply_text}
+							</Typography>
+						</>
+					}
+				</CardContent>
+			</Collapse>
+		</Card >
 	);
 }

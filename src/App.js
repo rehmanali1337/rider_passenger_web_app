@@ -5,6 +5,11 @@ import { Login } from './pages/Login'
 import { Requests } from './pages/Requests'
 import { SignUp } from './pages/SignUp'
 import { PostRide } from './pages/PostRide'
+import { OfferRide } from './pages/OfferRide'
+import { MyRides } from './pages/MyRides'
+import { About } from './pages/About'
+import { Contact } from "./pages/Contact";
+import { TermsAndConditions } from "./pages/TermsAndConditions";
 import '@fontsource/roboto';
 import { useContext } from 'react'
 import { GlobalContext } from './context/GlobalContext'
@@ -42,8 +47,23 @@ function App() {
           <Route path="/signup">
             <SignUp />
           </Route>
+          <Route path="/offer_ride">
+            <OfferRide />
+          </Route>
+          <Route path="/offered_rides">
+            <MyRides />
+          </Route>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route path="/contact_us">
+            <Contact />
+          </Route>
+          <Route path="/terms">
+            <TermsAndConditions />
+          </Route>
           <Route path="*">
-            404
+            <Home />
           </Route>
         </Switch>
       </BrowserRouter>
