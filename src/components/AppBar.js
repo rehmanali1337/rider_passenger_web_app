@@ -83,7 +83,9 @@ export default function HideAppBar(props) {
 								<>
 									<TopMenuButton href="/requests">Ride Requests</TopMenuButton>
 									<TopMenuButton href="/post_request">Post Request</TopMenuButton>
+									<TopMenuButton href="/my_rides">My Rides</TopMenuButton>
 									<TopMenuButton href="/offered_rides">Offered Rides</TopMenuButton>
+									<TopMenuButton href="/offer_ride">Offer Ride</TopMenuButton>
 								</>
 							}
 							{

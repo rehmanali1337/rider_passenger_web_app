@@ -1,6 +1,5 @@
 import React from 'react'
-import { useTheme } from '@material-ui/core/styles'
-import { Typography, Grid, makeStyles, Link, useMediaQuery } from '@material-ui/core'
+import { Typography, Grid, makeStyles, Link } from '@material-ui/core'
 
 
 
@@ -38,8 +37,6 @@ export const Footer = () => {
 		}
 	})
 	const classes = useStyles()
-	const theme = useTheme()
-	const onSmall = useMediaQuery(theme.breakpoints.up('md'))
 	return (
 		<div className={classes.root}>
 			<Grid container className={classes.root}>

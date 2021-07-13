@@ -6,6 +6,7 @@ import { Requests } from './pages/Requests'
 import { SignUp } from './pages/SignUp'
 import { PostRide } from './pages/PostRide'
 import { OfferRide } from './pages/OfferRide'
+import { OfferedRides } from "./pages/OfferedRides";
 import { MyRides } from './pages/MyRides'
 import { About } from './pages/About'
 import { Contact } from "./pages/Contact";
@@ -51,6 +52,9 @@ function App() {
             <OfferRide />
           </Route>
           <Route path="/offered_rides">
+            <OfferedRides />
+          </Route>
+          <Route path="/my_rides">
             <MyRides />
           </Route>
           <Route path="/about">

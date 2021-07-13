@@ -151,7 +151,9 @@ export default function MobileMenu({ children }) {
 						<>
 							<SideBarButton href="/requests">Ride Requests</SideBarButton>
 							<SideBarButton href="/post_request">Post Request</SideBarButton>
+							<SideBarButton href="/my_rides">My Rides</SideBarButton>
 							<SideBarButton href="/offered_rides">Offered Rides</SideBarButton>
+							<SideBarButton href="/offer_ride">Offer Ride</SideBarButton>
 						</>
 					}
 					{!loggedIn &&

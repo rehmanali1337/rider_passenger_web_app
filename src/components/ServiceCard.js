@@ -1,55 +1,59 @@
-
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { PageButton } from './Buttons'
-import { useSelector } from 'react-redux'
 
-const useStyles = makeStyles({
+
+const useStyles = makeStyles((theme) => ({
 	root: {
-		margin: '1rem',
-		display: 'relative',
-		textAlign: 'center',
-		justifyContent: 'center',
-		borderRadius: '1em',
-		marginTop: '2vh',
-		minHeight: '20rem',
-		maxHeight: '20rem'
+		display: 'flex',
+		marginTop: '2rem',
+		borderRadius: '1rem',
+		border: '1px solid',
+		minHeight: '300px',
+		maxHeight: '300px'
 	},
-	title: {
-		fontSize: '3em',
-		marginTop: '0.5rem',
-		fontFamily: 'cursive'
+	details: {
+		display: 'flex',
+		flexDirection: 'column',
 	},
-	actions: {
-		justifyContent: 'center',
-	}
-});
+	content: {
+		flex: '1 0 auto',
+		marginTop: '4rem',
+		marginLeft: '1vw'
+	},
+	cover: {
+		padding: '1rem',
+		paddingLeft: '2vw',
+		height: '100%',
+		minHeight: '200px',
+		minWidth: '200px',
+		maxWidth: '200px'
+	},
+}));
 
-export default function ServiceCard({ title, content }) {
+export default function MediaControlCard({ text, image }) {
 	const classes = useStyles();
-	const loggedIn = useSelector((state) => {
-		return state.loggedIn
-	})
 
 	return (
-		<Card className={classes.root} variant="outlined">
-			<CardContent >
-				<Typography className={classes.title} variant='h4'>
-					{title}
-				</Typography>
-				<Typography>
-					{content}
-				</Typography>
-			</CardContent>
-			<CardActions className={classes.actions}>
-				{!loggedIn &&
-					<PageButton href="/signup" >Signup</PageButton>
-				}
-			</CardActions>
+		<Card className={classes.root}>
+
+			<CardMedia
+				className={classes.cover}
+				component="img"
+				image={image}
+			/>
+
+			<div className={classes.details}>
+
+				<CardContent className={classes.content}>
+					<Typography component="h3" variant="h3">
+						{text}
+					</Typography>
+				</CardContent>
+			</div>
 		</Card>
 	);
 }

@@ -1,8 +1,8 @@
 import { Typography, makeStyles } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import MainContainer from '../components/MainContainer'
-import { MyRideCard } from '../components/MyRideCard'
-import { getMyRidesRequest } from '../utils/requests'
+import { OfferedRideCard } from '../components/OfferedRideCard'
+import { getAllOfferedRidesRequest } from '../utils/requests'
 import { useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 	}
 })
 
-export const MyRides = () => {
+export const OfferedRides = () => {
 	const [allRides, setAllRides] = useState([])
 	const [loading, setLoading] = useState(false)
 	const loggedIn = useSelector((state) => {
@@ -26,7 +26,7 @@ export const MyRides = () => {
 	const classes = useStyles()
 	useEffect(() => {
 		setLoading(true)
-		getMyRidesRequest(accessToken).then((response) => {
+		getAllOfferedRidesRequest(accessToken).then((response) => {
 			setAllRides(response.rides)
 			setLoading(false)
 		})
@@ -36,9 +36,6 @@ export const MyRides = () => {
 		<Redirect to="/login" />
 	}
 
-	// return (<MainContainer>
-	// 	<div>Working</div>
-	// </MainContainer>)
 
 	if (loading) {
 		return (
@@ -56,12 +53,12 @@ export const MyRides = () => {
 		)
 	}
 	const rides = allRides.map((ride) => {
-		return <MyRideCard key={ride.ride_id.toString()} ride={ride} />
+		return <OfferedRideCard key={ride.ride_id.toString()} ride={ride} />
 	})
 	return (
 		<MainContainer>
 			<Typography className={classes.header} variant="h4">
-				My Rides
+				Ride Offers
 			</Typography>
 			{rides}
 		</MainContainer>

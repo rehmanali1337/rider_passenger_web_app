@@ -147,3 +147,52 @@ export const deleteRideRequest = async (accessToken, rideId) => {
 	}
 	return await (await fetch(URL, options)).json()
 }
+
+
+
+export const addOfferedRide = async (accessToken, details, srcLocation, destLocation,
+	passengers, packages, payed, pickupTime, gender, call, text, money, phone) => {
+	console.log("Adding offered ride")
+	const URL = `${BASE_URL}/add_offered_ride`
+	const params = {
+		request_text: details,
+		pickup_location: srcLocation,
+		destination_location: destLocation,
+		passengers: passengers,
+		packages: packages,
+		payed: payed,
+		pickup_time: pickupTime,
+		gender: gender,
+		call: call,
+		text: text,
+		amount: money,
+		phone: phone
+	}
+	const options = {
+		mode: 'cors',
+		method: 'POST',
+		body: JSON.stringify(params),
+		headers: new Headers({
+			"Content-Type": "application/json",
+			"accept": "application/json",
+			"Authorization": `Bearer ${accessToken}`
+		})
+	}
+	return await (await fetch(URL, options)).json()
+}
+
+
+
+export const getAllOfferedRidesRequest = async (accessToken) => {
+	let URL = `${BASE_URL}/get_all_offered_rides`
+	const options = {
+		mode: 'cors',
+		method: 'GET',
+		headers: new Headers({
+			"Content-Type": "application/json",
+			"accept": "application/json",
+			"Authorization": `Bearer ${accessToken}`
+		})
+	}
+	return await (await fetch(URL, options)).json()
+}
